@@ -52,3 +52,7 @@ See [DESIGN.md](DESIGN.md) for architecture and trust boundaries and [AUDITING.m
 ## Origin
 
 The three-layer architecture was extracted from CoreVault. Bitcoin Core Feature Overlay is now the independently maintained reusable pattern. Its evolution does not require changes to or rebasing CoreVault.
+
+## Community
+
+Contributors and participants are expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
