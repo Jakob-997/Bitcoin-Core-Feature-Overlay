@@ -39,6 +39,7 @@ archive="$here/../bitcoin-32.0rc2-x86_64-linux-gnu.tar.gz"
 printf '0255103718033e6aee15fa944717fc277e047b845bff1e7408af0ea732d8d0c1  %s\n' "$archive" | sha256sum --check
 
 core_dir=$(mktemp -d "$here/../bitcoin-32.0rc2-$project_slug.XXXXXX")
+trap 'rm -rf "$state" "$core_dir"' EXIT
 tar -xzf "$archive" -C "$core_dir" --strip-components=1 --no-same-owner
 
 bitcoin_cli="$core_dir/bin/bitcoin-cli"
@@ -67,7 +68,7 @@ stop_core() {
 
 cleanup() {
     stop_core
-    rm -rf "$state"
+    rm -rf "$state" "$core_dir"
 }
 
 trap cleanup EXIT
