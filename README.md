@@ -44,6 +44,19 @@ For example, a guide might ask the reader to select the correct Core archive, st
 
 Automation also concentrates trust in the code: a faulty script can repeat a mistake consistently. This format does not make unreviewed code safe, establish a physical air gap, or prove that a backup works. Its value is making the executable steps and their assumptions easier to inspect, reproduce and test together. For a single straightforward command, a clear manual instruction may be enough.
 
+## Launcher layout
+
+The verified Bitcoin Core archive lives **next to the project folder**, not inside it. The launcher resolves it one directory above the project:
+
+```text
+~/bitcoin-32.0rc2-x86_64-linux-gnu.tar.gz
+~/example-overlay/
+    generator.py
+    tails.sh
+```
+
+Enter the project directory, then run `./tails.sh`. Temporary extracted Core directories are removed automatically after the run.
+
 ## Start a feature
 
 1. Copy this scaffold from a specific canonical repository commit and record that commit in your project's `AUDIT.md`.
