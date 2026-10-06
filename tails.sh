@@ -55,15 +55,22 @@ output_dir="$here/$output_dir_name"
 original_home=$HOME
 export HOME="$state"
 cd "$here"
+core_pid=""
 
 stop_core() {
     "$bitcoin_cli" stop >/dev/null 2>&1 || true
-    pkill -TERM -x bitcoind >/dev/null 2>&1 || true
-    pkill -TERM -x bitcoin-qt >/dev/null 2>&1 || true
 
-    while pgrep -x bitcoind >/dev/null 2>&1 || pgrep -x bitcoin-qt >/dev/null 2>&1; do
-        sleep 1
-    done
+    if [ -n "$core_pid" ]; then
+        while kill -0 "$core_pid" >/dev/null 2>&1; do
+            sleep 1
+        done
+    else
+        pkill -TERM -x bitcoind >/dev/null 2>&1 || true
+        pkill -TERM -x bitcoin-qt >/dev/null 2>&1 || true
+        while pgrep -x bitcoind >/dev/null 2>&1 || pgrep -x bitcoin-qt >/dev/null 2>&1; do
+            sleep 1
+        done
+    fi
 }
 
 cleanup() {
@@ -78,7 +85,8 @@ stop_core
 # Fail closed rather than reuse an old output set.
 mkdir "$output_dir"
 
-"$bitcoind_bin" -daemonwait -networkactive=0 -listen=0 -walletdir="$output_dir"
+"$bitcoind_bin" -daemonwait -pid="$state/bitcoind.pid" -networkactive=0 -listen=0 -walletdir="$output_dir"
+core_pid=$(cat "$state/bitcoind.pid")
 printf '\n'
 
 python3 "$here/generator.py" "$bitcoin_cli"
